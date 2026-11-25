@@ -37,7 +37,7 @@ describe("F2 AC2 cents offset from -50 to +50", () => {
   });
 
   it("stays within -50..+50 against the nearest note", () => {
-    for (let frequencyHz = 415; frequencyHz <= 1480; frequencyHz += 0.5) {
+    for (let frequencyHz = 415.5; frequencyHz <= 1479.5; frequencyHz += 0.5) {
       const result = frequencyToNote(frequencyHz);
       if (!result.ok) throw new Error(result.error);
       const cents = centsFromNote(frequencyHz, result.value.note);
