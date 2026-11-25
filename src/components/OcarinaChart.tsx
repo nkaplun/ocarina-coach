@@ -26,8 +26,6 @@ const HOLE_POSITIONS: Record<HoleId, { x: number; y: number; r: number }> = {
   "R-thumb": { x: 220, y: 172, r: 11 },
 };
 
-const HOLE_IDS = Object.keys(HOLE_POSITIONS) as HoleId[];
-
 /** "C5 fingering. Covered: left thumb, …" or "F6 fingering. All holes open." */
 function chartLabel(note: Note, covered: ReadonlySet<HoleId>): string {
   const names = HOLES.filter((hole) => covered.has(hole.id)).map(
@@ -54,7 +52,7 @@ export function OcarinaChart({ note }: OcarinaChartProps) {
         stroke="#8a6d45"
         strokeWidth={2}
       />
-      {HOLE_IDS.map((id) => {
+      {HOLES.map(({ id }) => {
         const { x, y, r } = HOLE_POSITIONS[id];
         const isCovered = covered.has(id);
         return (
