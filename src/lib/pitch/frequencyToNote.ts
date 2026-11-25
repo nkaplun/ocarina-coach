@@ -5,26 +5,14 @@ import {
   octaveOf,
   type Note,
 } from "@/lib/notes";
-import {
-  A4_HZ,
-  A4_NOTE,
-  CENTS_PER_SEMITONE,
-  RANGE_MARGIN_CENTS,
-  SEMITONES_PER_OCTAVE,
-} from "@/lib/pitch/constants";
-import { semitonesFromA4 } from "@/lib/pitch/scale";
+import { A4_NOTE, RANGE_MARGIN_CENTS } from "@/lib/pitch/constants";
+import { frequencyHzAt, semitonesFromA4 } from "@/lib/pitch/scale";
 
 /** The nearest note to a measured frequency. */
 export type NoteReading = { note: Note; name: string; octave: number };
 
 export type FrequencyResult =
   { ok: true; value: NoteReading } | { ok: false; error: string };
-
-/** The in-tune frequency of a note, shifted by `cents`. */
-function frequencyHzAt(note: Note, cents: number): number {
-  const semitones = note - A4_NOTE + cents / CENTS_PER_SEMITONE;
-  return A4_HZ * 2 ** (semitones / SEMITONES_PER_OCTAVE);
-}
 
 /** Lowest frequency accepted: one margin below A4. */
 export const MIN_FREQUENCY_HZ = frequencyHzAt(LOWEST_NOTE, -RANGE_MARGIN_CENTS);
