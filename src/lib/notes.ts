@@ -51,8 +51,39 @@ export type ParseNoteResult =
 
 /** Turns text like "A#4" or "Bb4" into a playable note, or explains why not. */
 export function parseNote(text: string): ParseNoteResult {
-  return { ok: false, error: `${text} is not implemented.` };
+  const trimmed = text.trim();
+  const match = NOTE_PATTERN.exec(trimmed);
+  if (!match) {
+    return {
+      ok: false,
+      error: `"${trimmed}" is not a note name. Use a letter A to G, an optional # or b, and an octave, like C5 or Bb4.`,
+    };
+  }
+  const [, letter, accidental, octaveText] = match;
+  const pitchClass = LETTER_PITCH_CLASS[letter.toUpperCase()];
+  const shift = accidental === "#" ? 1 : accidental === "b" ? -1 : 0;
+  const note = (Number(octaveText) + 1) * 12 + pitchClass + shift;
+  if (note < LOWEST_NOTE || note > HIGHEST_NOTE) {
+    return {
+      ok: false,
+      error: `${trimmed} is outside the Alto C range (A4 to F6).`,
+    };
+  }
+  return { ok: true, value: note };
 }
+
+/** Letter, optional sharp (#) or flat (b), one-digit octave. */
+const NOTE_PATTERN = /^([A-Ga-g])([#b]?)(\d)$/;
+
+const LETTER_PITCH_CLASS: Record<string, number> = {
+  C: 0,
+  D: 2,
+  E: 4,
+  F: 5,
+  G: 7,
+  A: 9,
+  B: 11,
+};
 
 /** "C5" for naturals, "A#4 / Bb4" for sharps and flats. */
 export function noteLabel(note: Note): string {
