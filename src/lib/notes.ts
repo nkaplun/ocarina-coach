@@ -42,7 +42,8 @@ const FLAT_NAMES = [
   "B",
 ] as const;
 
-function octaveOf(note: Note): number {
+/** Scientific-pitch octave: MIDI 60 (middle C) is octave 4. */
+export function octaveOf(note: Note): number {
   return Math.floor(note / 12) - 1;
 }
 
