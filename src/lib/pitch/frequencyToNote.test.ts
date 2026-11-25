@@ -32,3 +32,47 @@ describe("F2 AC1 frequency maps to nearest note", () => {
     });
   });
 });
+
+describe("F2 AC4 rejects invalid and out-of-range frequencies", () => {
+  function errorFor(frequencyHz: number): string {
+    const result = frequencyToNote(frequencyHz);
+    if (result.ok) throw new Error(`${frequencyHz} Hz was accepted`);
+    return result.error;
+  }
+
+  it.each([NaN, Infinity, -Infinity])("rejects %d as not a number", (value) => {
+    expect(errorFor(value)).toMatch(/not a number/);
+  });
+
+  it.each([0, -1, -440])("rejects %d Hz as not above 0", (frequencyHz) => {
+    expect(errorFor(frequencyHz)).toMatch(/above 0 Hz/);
+  });
+
+  // Accepted range: one semitone past each end of A4..F6,
+  // i.e. G#4 (415.30 Hz) to F#6 (1479.98 Hz).
+  it.each([415.29, 400, 261.63, 1])(
+    "rejects %d Hz as too low",
+    (frequencyHz) => {
+      expect(errorFor(frequencyHz)).toMatch(/too low/);
+    },
+  );
+
+  it.each([1479.99, 1500, 2093, 20000])(
+    "rejects %d Hz as too high",
+    (frequencyHz) => {
+      expect(errorFor(frequencyHz)).toMatch(/too high/);
+    },
+  );
+
+  it.each([
+    [415.31, "G#4"],
+    [430, "A4"],
+    [1396.91, "F6"],
+    [1479.97, "F#6"],
+  ])("accepts %d Hz inside the margin as %s", (frequencyHz, name) => {
+    expect(frequencyToNote(frequencyHz)).toMatchObject({
+      ok: true,
+      value: { name },
+    });
+  });
+});
