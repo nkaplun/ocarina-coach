@@ -1,6 +1,7 @@
 import type { Note } from "@/lib/notes";
-import type { NoteReading } from "@/lib/pitch/frequencyToNote";
-import type { TuningStatus } from "@/lib/pitch/tuning";
+import { centsFromNote } from "@/lib/pitch/cents";
+import { frequencyToNote, type NoteReading } from "@/lib/pitch/frequencyToNote";
+import { tuningStatus, type TuningStatus } from "@/lib/pitch/tuning";
 
 /** What the learner played, compared with the note they were asked for. */
 export type NoteCheck = {
@@ -16,5 +17,16 @@ export type NoteCheckResult =
 
 /** Says whether a measured frequency is the target note, and how in tune. */
 export function checkNote(target: Note, frequencyHz: number): NoteCheckResult {
-  throw new Error(`Not implemented yet (F2 AC5): ${target}, ${frequencyHz} Hz`);
+  const reading = frequencyToNote(frequencyHz);
+  if (!reading.ok) return reading;
+  const cents = centsFromNote(frequencyHz, target);
+  return {
+    ok: true,
+    value: {
+      isRightNote: reading.value.note === target,
+      played: reading.value,
+      cents,
+      status: tuningStatus(cents),
+    },
+  };
 }
