@@ -22,65 +22,92 @@ Date: 2026-11-24. Explore step only, no code written.
 | AC4 | Fingerings stored as data, one list of covered holes per note | `lib` (table has 21 entries, valid hole IDs) |
 | AC5 | Notes outside the range rejected with a clear message | `lib` (`{ ok: false, error }`) + component |
 
-## 3. How a 12-hole Alto C is laid out
+## 3. Decisions (confirmed by Nicholas, 2026-11-24)
 
-- **10 main holes**: 4 fingers + thumb on each hand (left index, middle, ring, pinky, thumb; same on the right).
-- **2 sub-holes**: small extra holes used only for the two lowest notes (A4, B4).
-  - **Taiwanese layout**: sub-holes next to the left and right middle fingers.
-  - **Japanese layout**: both sub-holes on the right hand (next to right index and right middle).
-- **Range**: A4 to F6 (21 chromatic notes). The lowest C is C5 (about 523 Hz). This matches the PRD and the F2 test values (523.25 Hz → C5).
-  - Note: pureocarinas.com writes the lowest C as "C4" (the written note on the staff). fingeringcharts.pages.dev calls it C5. This app should use **sounding pitch**, so C5. I did not find a source that states this outright; it should be checked against a tuner on a real Alto C.
+| Question | Decision |
+|---|---|
+| Instrument | 12-hole Alto C (AC) only |
+| Source of truth | [Imperial City Ocarina, "12-Hole Alto, Key of C — Complete Fingering Chart"](https://www.imperialcityocarina.com/images/cache/ac-12-hole-fingering-chart.pdf) (2 pages, © Imperial City Ocarina) |
+| Sub-hole layout | Taiwanese: one sub-hole next to each middle finger |
+| High-octave system | Asian (E6 = left pinky only) |
 
-## 4. Draft fingering table (needs verification)
+The chart PDF is copyrighted, so it is linked rather than committed. The fingering data in this repo is a transcription of it.
 
-Abbreviations: L/R = left/right hand. t = thumb, i = index, m = middle, r = ring, p = pinky. "sub" = sub-hole. Holes not listed are open.
+## 4. Octave: settled by the chart
 
-| Note | Covered holes | Source | Confidence |
-|---|---|---|---|
-| A4 | all 10 main + both subs | P1 | Medium |
-| A#4 / Bb4 | not found | none | **Missing** |
-| B4 | all 10 main + one sub ("right" sub) | P1 | Medium |
-| C5 | all 10 main | P1, P2 | High |
-| C#5 / Db5 | Lt Li Lm Lr Lp, Rt Ri Rm Rr + "Rp1" | P2 | Low (see 5.2) |
-| D5 | Lt Li Lm Lr Lp, Rt Ri Rm Rr | P1, P2 | High |
-| D#5 / Eb5 | Lt Li Lm Lr Lp, Rt Ri Rm + "Rp1 Rp2" | P2 | Low (see 5.2) |
-| E5 | Lt Li Lm Lr Lp, Rt Ri Rm | P2 | High |
-| F5 | Lt Li Lm Lr Lp, Rt Ri | P2 | High |
-| F#5 / Gb5 | Lt Li Lm Lr Lp, Rt Rm + "Rp1" | P2 | Low |
-| G5 | Lt Li Lm Lr Lp, Rt | P1, P2 | High |
-| G#5 / Ab5 | Lt Li Lm Lp, Rt Rr | P2 | Medium |
-| A5 | Lt Li Lm Lp, Rt Ri Rm | P1, P2 | Medium |
-| A#5 / Bb5 | Lt Li Lp, Rt Rr | P2 | Medium |
-| B5 | Lt Lp, Rt (P2) vs Lt Li Lp (P1) | P1, P2 | **Sources disagree** |
-| C6 | Lp, Rt (P2) vs Lt only (P1 list) | P1, P2 | **Sources disagree** |
-| C#6 / Db6 | Lp, Rt Rr | P2 | Medium |
-| D6 | Lp, Rt | P1, P2 | High |
-| D#6 / Eb6 | Lm Lp | P2 | Low |
-| E6 | Lp (Asian system) | P1 | Medium |
-| F6 | none (all open) | P1, P2 | High |
+The chart footer says: **"Notes are written one octave lower than actual pitch."** The chart's written range is A3 to F5. It sounds A4 to F6, so the lowest C sounds as **C5 (≈523 Hz)**. This matches the PRD range and the F2 test values. The app uses **sounding pitch** everywhere.
 
-The pureocarinas hole lists came from image alt text, not from looking at the diagrams themselves.
+## 5. Hole layout and IDs
 
-## 5. Problems found
+12 holes: 2 thumbs, 8 main finger holes, and 2 sub-holes.
 
-1. **Fingerings vary by maker.** Every source says sharps/flats and sub-hole use depend on the instrument, and tells players to use the chart from their own ocarina's maker. A single "standard" chart does not fully exist.
-2. **"Rp1 / Rp2" doesn't fit a 12-hole model.** P2's sharp fingerings use a split right-pinky hole (two small holes). That reads like a 13th hole, or a half-covered pinky. PRD F1 AC2 says exactly 12 holes, so these three fingerings (C#5, D#5, F#5) need a different source.
-3. **A#4 is missing** from every readable source.
-4. **B5 and C6 disagree** between the two pureocarinas pages.
-5. **fingeringcharts.pages.dev is unreliable.** Its hole numbering doesn't match its own table (it says all 12 holes covered for C5, which would also close the sub-holes). Not used.
-6. **Two high-octave systems exist** (Asian vs Italian). They differ only at E6. Asian is the common default.
+| Proposed ID | Hole | Position in the chart drawing |
+|---|---|---|
+| `L-thumb` | Left thumb | Dot floating left of the body |
+| `L-index` | Left index | Lowest-left body hole |
+| `L-middle` | Left middle | Second left hole |
+| `L-ring` | Left ring | Third left hole |
+| `L-pinky` | Left pinky | Top left hole, near the upper edge |
+| `L-sub` | Left sub-hole | Small hole beside left middle |
+| `R-thumb` | Right thumb | Dot floating below-right of the body |
+| `R-index` | Right index | Lowest right body hole |
+| `R-middle` | Right middle | Second right hole |
+| `R-ring` | Right ring | Third right hole |
+| `R-pinky` | Right pinky | Hole at the narrow tip |
+| `R-sub` | Right sub-hole | Small hole beside right middle |
 
-## 6. Decisions needed before writing tests
+**Caveat:** the chart draws holes but doesn't label fingers. I worked out the finger names from the hole positions and from where the chart agrees with the Pure Ocarinas fingerings. The mapping is consistent across all 21 notes. The left-hand order (index lowest, pinky top) is the one inferred part.
 
-1. **Which instrument's chart is the source of truth?** Best option: the printed chart from a specific maker's 12-hole Alto C (for example the one that came with Nicholas's ocarina), recorded in `fingerings.ts`.
-2. **Sub-hole layout**: Taiwanese (both middle fingers) or Japanese (both right hand)? This changes where the SVG draws the 2 small holes.
-3. **High-octave system**: Asian (assumed) or Italian?
-4. **Hole IDs**: suggest stable string IDs like `L-thumb`, `L-index`, …, `L-sub`, `R-sub`, so the accessible label (AC3) can read them out directly.
+## 6. Fingering table (transcribed from the source of truth)
+
+Holes not listed are open. Filled dot = covered, white/outline = open.
+
+| # | Sounding note | Covered holes |
+|---|---|---|
+| 1 | A4 | all 10 main + `L-sub` + `R-sub` (all 12) |
+| 2 | A#4 / Bb4 | all 10 main + `L-sub` |
+| 3 | B4 | all 10 main + `R-sub` |
+| 4 | C5 | all 10 main (both subs open) |
+| 5 | C#5 / Db5 | L-thumb, L-index, L-middle, L-ring, L-pinky, R-thumb, R-index, R-middle, R-ring, `R-sub` |
+| 6 | D5 | L-thumb, L-index, L-middle, L-ring, L-pinky, R-thumb, R-index, R-middle, R-ring |
+| 7 | D#5 / Eb5 | L-thumb, L-index, L-middle, L-ring, L-pinky, R-thumb, R-index, R-middle, R-pinky |
+| 8 | E5 | L-thumb, L-index, L-middle, L-ring, L-pinky, R-thumb, R-index, R-middle |
+| 9 | F5 | L-thumb, L-index, L-middle, L-ring, L-pinky, R-thumb, R-index |
+| 10 | F#5 / Gb5 | L-thumb, L-index, L-middle, L-ring, L-pinky, R-thumb, R-ring |
+| 11 | G5 | L-thumb, L-index, L-middle, L-ring, L-pinky, R-thumb |
+| 12 | G#5 / Ab5 | L-thumb, L-index, L-middle, L-pinky, R-thumb, R-ring |
+| 13 | A5 | L-thumb, L-index, L-middle, L-pinky, R-thumb |
+| 14 | A#5 / Bb5 | L-thumb, L-index, L-pinky, R-thumb, R-ring |
+| 15 | B5 | L-thumb, L-index, L-pinky, R-thumb |
+| 16 | C6 | L-thumb, L-pinky, R-thumb |
+| 17 | C#6 / Db6 | L-pinky, R-thumb, R-ring |
+| 18 | D6 | L-pinky, R-thumb |
+| 19 | D#6 / Eb6 | L-pinky, R-ring |
+| 20 | E6 | L-pinky |
+| 21 | F6 | none (all open) |
+
+Quick sanity checks that should become tests:
+- Exactly 21 entries, one per chromatic note A4 to F6.
+- Sub-holes are covered only for A4, A#4, B4, and C#5.
+- Every hole ID used is one of the 12 IDs above.
+
+## 7. Where the earlier sources disagreed (now resolved)
+
+The first pass used Pure Ocarinas and other web charts. Where they differ, the Imperial City chart wins:
+
+| Note | Earlier source said | Source of truth says |
+|---|---|---|
+| A#4 | (missing) | 10 main + left sub |
+| C#5 | uses a split right-pinky hole | 10 main minus right pinky, plus right sub |
+| F#5 | Rt Rm + split pinky | Rt Rr |
+| A5 | right index + middle covered | right hand open except thumb |
+| B5 / C6 | two Pure Ocarinas pages disagreed | B5: Lt Li Lp Rt. C6: Lt Lp Rt |
+| D#6 | Lm Lp | Lp Rr |
 
 ## Sources
 
-- P1: [Pure Ocarinas, "The ocarina's fingering system"](https://pureocarinas.com/ocarina-fingering-system) — hole layout, sub-holes, Taiwanese vs Japanese, Asian vs Italian, A4/B4/C5/D5/G5/D6/E6/F6.
-- P2: [Pure Ocarinas, "Learning the ocarina's fingerings"](https://pureocarinas.com/learning-ocarina-fingerings) — natural and accidental fingerings (from image alt text).
-- S3: [Ocarina Making, fingering chart generator](https://ocarinamaking.com/chartgen/) and its [12-hole Japanese chart in C](https://ocarinamaking.com/chartgen/display/12h_jap/c) — confirms the Japanese/Taiwanese split; chart is image-only, so no hole data was read. States its charts are generic, not any one maker's.
-- S4: [fingeringcharts.pages.dev](https://fingeringcharts.pages.dev/pages/ocarina-fingering-chart) — calls the lowest note C5; otherwise inconsistent, not used.
-- Not used: several "12 hole ocarina finger chart" pages in search results were copied spam pages on unrelated university/company domains.
+- **Source of truth:** [Imperial City Ocarina, 12-Hole Alto C fingering chart (PDF)](https://www.imperialcityocarina.com/images/cache/ac-12-hole-fingering-chart.pdf). Read by rendering both pages at 300 dpi and checking each of the 21 diagrams.
+- Background only:
+  - [Pure Ocarinas, "The ocarina's fingering system"](https://pureocarinas.com/ocarina-fingering-system): Taiwanese vs Japanese sub-holes, Asian vs Italian high notes.
+  - [Pure Ocarinas, "Learning the ocarina's fingerings"](https://pureocarinas.com/learning-ocarina-fingerings): used to cross-check which finger is which.
+  - [Ocarina Making chart generator](https://ocarinamaking.com/chartgen/): confirms fingerings vary by maker.
