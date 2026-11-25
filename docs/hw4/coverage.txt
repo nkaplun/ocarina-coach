@@ -1,0 +1,21 @@
+# npm run coverage — 2026-11-24, commit e1527fd
+# Scope: src/lib and src/components (v8). Fully covered files are hidden from the table.
+
+ Test Files  10 passed (10)
+      Tests  136 passed (136)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |     100 |    97.61 |     100 |     100 |                   
+ components        |     100 |    93.33 |     100 |     100 |                   
+  OcarinaChart.tsx |     100 |     87.5 |     100 |     100 | 40                
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 100% ( 86/86 )
+Branches     : 97.61% ( 41/42 )
+Functions    : 100% ( 20/20 )
+Lines        : 100% ( 82/82 )
+================================================================================
