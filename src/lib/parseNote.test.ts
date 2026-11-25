@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseNote } from "@/lib/notes";
+import { ALTO_C_NOTES, noteName, parseNote } from "@/lib/notes";
 
 describe("F1 AC5 parseNote rejects out-of-range and invalid notes", () => {
   it.each([
@@ -40,4 +40,12 @@ describe("F1 AC5 parseNote rejects out-of-range and invalid notes", () => {
       }
     },
   );
+});
+
+describe("F1 AC1 note names used in picker URLs", () => {
+  it("every note's URL name parses back to the same note", () => {
+    ALTO_C_NOTES.forEach((note) => {
+      expect(parseNote(noteName(note))).toEqual({ ok: true, value: note });
+    });
+  });
 });
