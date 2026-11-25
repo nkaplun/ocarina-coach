@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { OcarinaChart } from "@/components/OcarinaChart";
 import { getFingering } from "@/lib/fingerings";
@@ -48,5 +48,30 @@ describe("F1 AC2 chart draws 12 holes, covered filled", () => {
     expect(coveredFills.size).toBe(1);
     expect(openFills.size).toBe(1);
     expect([...coveredFills][0]).not.toBe([...openFills][0]);
+  });
+});
+
+describe("F1 AC3 chart has accessible label", () => {
+  it("names the note and every covered hole in plain words", () => {
+    render(<OcarinaChart note={72} />);
+    expect(
+      screen.getByRole("img", {
+        name: "C5 fingering. Covered: left thumb, left index, left middle, left ring, left pinky, right thumb, right index, right middle, right ring, right pinky.",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("includes sub-holes and both spellings of a sharp", () => {
+    render(<OcarinaChart note={70} />);
+    expect(
+      screen.getByRole("img", { name: /^A#4 \/ Bb4 fingering\./ }),
+    ).toHaveAccessibleName(/left sub-hole/);
+  });
+
+  it("says all holes are open when none are covered", () => {
+    render(<OcarinaChart note={89} />);
+    expect(
+      screen.getByRole("img", { name: "F6 fingering. All holes open." }),
+    ).toBeInTheDocument();
   });
 });
