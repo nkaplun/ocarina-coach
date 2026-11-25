@@ -85,11 +85,14 @@ const LETTER_PITCH_CLASS: Record<string, number> = {
   B: 11,
 };
 
+/** Short name using sharps, e.g. "A#4". Used in URLs; parseNote reads it back. */
+export function noteName(note: Note): string {
+  return `${SHARP_NAMES[note % 12]}${octaveOf(note)}`;
+}
+
 /** "C5" for naturals, "A#4 / Bb4" for sharps and flats. */
 export function noteLabel(note: Note): string {
-  const pitchClass = note % 12;
-  const octave = octaveOf(note);
-  const sharp = `${SHARP_NAMES[pitchClass]}${octave}`;
-  const flat = `${FLAT_NAMES[pitchClass]}${octave}`;
+  const sharp = noteName(note);
+  const flat = `${FLAT_NAMES[note % 12]}${octaveOf(note)}`;
   return sharp === flat ? sharp : `${sharp} / ${flat}`;
 }
