@@ -46,6 +46,14 @@ function octaveOf(note: Note): number {
   return Math.floor(note / 12) - 1;
 }
 
+export type ParseNoteResult =
+  { ok: true; value: Note } | { ok: false; error: string };
+
+/** Turns text like "A#4" or "Bb4" into a playable note, or explains why not. */
+export function parseNote(text: string): ParseNoteResult {
+  return { ok: false, error: `${text} is not implemented.` };
+}
+
 /** "C5" for naturals, "A#4 / Bb4" for sharps and flats. */
 export function noteLabel(note: Note): string {
   const pitchClass = note % 12;
