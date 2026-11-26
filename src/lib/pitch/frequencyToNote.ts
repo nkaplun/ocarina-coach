@@ -6,6 +6,7 @@ import {
   type Note,
 } from "@/lib/notes";
 import { A4_NOTE, RANGE_MARGIN_CENTS } from "@/lib/pitch/constants";
+import { formatFrequencyHz } from "@/lib/pitch/format";
 import { frequencyHzAt, semitonesFromA4 } from "@/lib/pitch/scale";
 
 /** The nearest note to a measured frequency. */
@@ -33,13 +34,13 @@ export function frequencyToNote(frequencyHz: number): FrequencyResult {
   if (frequencyHz < MIN_FREQUENCY_HZ) {
     return {
       ok: false,
-      error: `${frequencyHz} Hz is too low for an Alto C ocarina (lowest is about ${MIN_FREQUENCY_HZ.toFixed(1)} Hz).`,
+      error: `${frequencyHz} Hz is too low for an Alto C ocarina (lowest is about ${formatFrequencyHz(MIN_FREQUENCY_HZ)}).`,
     };
   }
   if (frequencyHz > MAX_FREQUENCY_HZ) {
     return {
       ok: false,
-      error: `${frequencyHz} Hz is too high for an Alto C ocarina (highest is about ${MAX_FREQUENCY_HZ.toFixed(1)} Hz).`,
+      error: `${frequencyHz} Hz is too high for an Alto C ocarina (highest is about ${formatFrequencyHz(MAX_FREQUENCY_HZ)}).`,
     };
   }
   const note = A4_NOTE + Math.round(semitonesFromA4(frequencyHz));

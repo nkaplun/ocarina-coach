@@ -38,3 +38,20 @@ describe("F1 AC5 panel shows message for out-of-range note", () => {
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
   });
 });
+
+describe("F1 AC6 panel shows the target pitch in Hz", () => {
+  it.each([
+    ["A4", "440.0 Hz"],
+    ["Bb4", "466.2 Hz"],
+    ["C5", "523.3 Hz"],
+  ])("shows %s as %s", (noteText, hzText) => {
+    render(<FingeringPanel noteText={noteText} />);
+    expect(screen.getByText(hzText)).toBeInTheDocument();
+  });
+
+  it.each(["G6", "H2"])("shows no pitch for %s, only the alert", (noteText) => {
+    render(<FingeringPanel noteText={noteText} />);
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(screen.queryByText(/Hz/)).not.toBeInTheDocument();
+  });
+});

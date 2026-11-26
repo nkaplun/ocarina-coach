@@ -1,5 +1,7 @@
 import { OcarinaChart } from "@/components/OcarinaChart";
 import { noteLabel, parseNote } from "@/lib/notes";
+import { formatFrequencyHz } from "@/lib/pitch/format";
+import { frequencyHzAt } from "@/lib/pitch/scale";
 
 /** Shown when the URL has no note, since it's the "all main holes" home position. */
 export const DEFAULT_NOTE_TEXT = "C5";
@@ -25,7 +27,12 @@ export function FingeringPanel({
 
   return (
     <section className="flex flex-col items-center gap-4">
-      <h2 className="text-2xl font-semibold">{noteLabel(result.value)}</h2>
+      <div className="flex flex-col items-center gap-1">
+        <h2 className="text-2xl font-semibold">{noteLabel(result.value)}</h2>
+        <p className="text-zinc-600 dark:text-zinc-400">
+          {formatFrequencyHz(frequencyHzAt(result.value))}
+        </p>
+      </div>
       <OcarinaChart note={result.value} />
     </section>
   );
