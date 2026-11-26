@@ -30,5 +30,24 @@ What didn't work: I ran `/clear` before exporting the Part 1 session, so I had t
 - 136 tests, 100% line coverage and 97.6% branch coverage over `src/lib` and `src/components`.
 
 ## Kishan
+Annotated log: [session-log-kishan.md](session-log-kishan.md).
 
-_(Kishan adds his section here: his F1 AC6 cycle, and what helped most coming into the repo cold.)_
+### How Explore → Plan → Implement → Commit compared to my previous approach
+
+On LoopLab I already worked from planning artifacts (PRD, mockup, rules file, issues with acceptance criteria), and tests usually came first: a failing-test commit with stubs (`c7d09e1`) came before the code that passed it (`1bce5b9`). The weak spots were scope and consistency. PRs grew past our 400-line guideline (about 690 lines for #11 and 1,050 for #9), and commits made in GitHub's web editor slipped to defaults like "Update standups.md."
+
+For F1 AC6, the new part was a separate Explore step, which mattered because I was coming into Nicholas's codebase cold. It found that AC6 wasn't in the PRD yet, and that putting the Hz inside the `<h2>` would break an existing F1 AC5 test that matches the heading exactly. Plan mode put both options side by side before any code existed, so I chose a separate element and left the old test untouched. **Explore told me what I'd break; Plan let me decide before breaking it.** Each phase got its own commit and the PR covered one acceptance criterion, so it stayed small. Red showed 3 tests failing for the right reason, green changed one file with no test edits, and Claude confirmed the refactor kept the error strings byte-identical, since the F2 tests only match them loosely.
+
+There was some friction. The session had no Glob/Grep tools, so Claude explored with shell `find` and `grep`. A fresh clone also needed `npm ci --legacy-peer-deps` and `npx next typegen` before the baseline passed. Neither step is in the README, so I noted both in the PR.
+
+### What context management strategies worked best
+
+1. **CLAUDE.md, the PRD, and HANDOFF.md as onboarding.** They gave me the conventions (AC names in `describe` blocks, typecheck and lint before green commits) without asking Nicholas anything.
+2. **`/compact` before `/export`.** That kept the log focused. Following Nicholas's lesson, I exported before clearing.
+3. **`/clear` before the PR review.** The fresh session didn't trust my earlier one. It checked out the red and green commits and re-ran every check itself.
+4. **Shared permission rules.** `git push` and `gh pr create` overrode auto mode and asked me first, so every step that touched the remote got a human check.
+
+### Results
+
+- F1 AC6: explore, plan, PRD, red, green and refactor commits, plus the session log, merged via PR #1 with a merge commit so the history stays visible.
+- 141/141 tests passing; coverage unchanged at 100% lines and 97.6% branches.
