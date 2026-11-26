@@ -35,6 +35,7 @@ Pick a note and see a drawing of the ocarina with the holes to cover filled in.
 - AC3: The drawing has an accessible text label naming the note and which holes are covered.
 - AC4: Fingerings are stored as data (one list of covered holes per note), not as image files.
 - AC5: Notes outside the instrument's range are rejected with a clear message.
+- AC6: Shows the selected note's target pitch in Hz, rounded to one decimal (for example C5 shows 523.3 Hz), so learners know what the tuner should read. An invalid note shows no pitch, only the AC5 message.
 
 ### F2. Note detection (pitch to note)
 
